@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>GameplayCore Docs</title>
+<style>
+:root{--bg:#fff;--fg:#1b2130;--mut:#5b657a;--card:#f4f6fb;--bd:#e0e5ef;--ac:#5b4bf0;--ac2:#0891b2;--hd:rgba(255,255,255,.88);--cd:#0f1524;--cf:#dbe4f5;--k:#c4a5ff;--s:#8fe3a8;--c:#7a869f;--n:#ffb86b;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);color-scheme:light}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0b0f1a;--fg:#e6eaf4;--mut:#97a1b8;--card:#121828;--bd:#222b40;--ac:#8b7dff;--ac2:#22d3ee;--hd:rgba(11,15,26,.88);--cd:#0a0e19;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0b0f1a;--fg:#e6eaf4;--mut:#97a1b8;--card:#121828;--bd:#222b40;--ac:#8b7dff;--ac2:#22d3ee;--hd:rgba(11,15,26,.88);--cd:#0a0e19;color-scheme:dark}
+html{scroll-padding-top:calc(72px + env(safe-area-inset-top,0px));scroll-behavior:smooth}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.65 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);background:var(--hd);backdrop-filter:blur(10px);z-index:10}
+header{position:sticky;top:env(safe-area-inset-top,0px);z-index:11;display:flex;align-items:center;gap:12px;padding:12px 20px;background:var(--hd);backdrop-filter:blur(10px);border-bottom:1px solid var(--bd)}
+.logo{font-weight:800;letter-spacing:-.02em;font-size:18px}.logo b{background:linear-gradient(90deg,var(--ac),var(--ac2));-webkit-background-clip:text;background-clip:text;color:transparent}
+.sp{flex:1}
+button.ic{border:1px solid var(--bd);background:var(--card);color:var(--fg);border-radius:10px;padding:6px 12px;font:inherit;font-size:14px;cursor:pointer}
+#menu{display:none}
+.wrap{display:grid;grid-template-columns:260px minmax(0,1fr);max-width:1180px;margin:0 auto}
+nav{position:sticky;top:calc(58px + env(safe-area-inset-top,0px));align-self:start;height:calc(100vh - 58px);overflow:auto;padding:22px 14px 40px 20px;font-size:14.5px}
+nav a{display:block;color:var(--mut);text-decoration:none;padding:5px 10px;border-radius:8px;border-left:2px solid transparent}
+nav a:hover{color:var(--fg);background:var(--card)}
+nav a.on{color:var(--ac);background:var(--card);border-left-color:var(--ac);font-weight:600}
+nav .g{margin:16px 10px 4px;font-size:11px;text-transform:uppercase;letter-spacing:.09em;color:var(--mut);opacity:.8}
+main{padding:30px 28px 90px;min-width:0}
+.hero{padding:30px 0 10px}
+.hero h1{font-size:clamp(34px,6vw,54px);line-height:1.08;margin:0 0 14px;letter-spacing:-.03em}
+.hero h1 span{background:linear-gradient(90deg,var(--ac),var(--ac2));-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero p{font-size:19px;color:var(--mut);max-width:640px;margin:0 0 20px}
+.btn{display:inline-block;padding:10px 18px;border-radius:12px;background:var(--ac);color:#fff;text-decoration:none;font-weight:600;margin:0 8px 8px 0}
+.btn.o{background:transparent;color:var(--fg);border:1px solid var(--bd)}
+section{padding-top:26px}
+h2{font-size:28px;letter-spacing:-.02em;margin:40px 0 10px;padding-bottom:8px;border-bottom:1px solid var(--bd)}
+h3{font-size:19px;margin:28px 0 6px}
+p{margin:8px 0}li{margin:4px 0}
+a{color:var(--ac)}
+code{font:13.5px ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+p code,li code,td code,h3 code{background:var(--card);border:1px solid var(--bd);padding:1px 6px;border-radius:6px;color:var(--ac)}
+pre{position:relative;background:var(--cd);color:var(--cf);border-radius:14px;padding:16px 18px;overflow-x:auto;margin:12px 0;border:1px solid var(--bd);line-height:1.55}
+pre code{color:inherit}
+pre .k{color:var(--k)}pre .s{color:var(--s)}pre .c{color:var(--c);font-style:italic}pre .n{color:var(--n)}
+pre .cp{position:absolute;top:8px;right:8px;font-size:12px;padding:3px 9px;border-radius:8px;border:1px solid #2c3550;background:#18203a;color:#b7c3e0;cursor:pointer;opacity:0;transition:.15s}
+pre:hover .cp{opacity:1}
+.tw{overflow-x:auto;margin:12px 0;border:1px solid var(--bd);border-radius:12px}
+table{border-collapse:collapse;width:100%;font-size:14.5px}
+th,td{text-align:left;padding:9px 13px;border-bottom:1px solid var(--bd);vertical-align:top}
+th{background:var(--card);font-size:12.5px;text-transform:uppercase;letter-spacing:.05em;color:var(--mut)}
+tr:last-child td{border-bottom:0}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px;margin:14px 0}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:14px 16px}
+.card h4{margin:0 0 4px;font-size:16px}.card p{margin:0;color:var(--mut);font-size:14.5px}
+.note{border-left:4px solid var(--ac);background:var(--card);padding:10px 14px;border-radius:0 12px 12px 0;margin:14px 0;font-size:15px}
+.note.w{border-left-color:#f59e0b}
+.tag{display:inline-block;font-size:11.5px;padding:1px 8px;border-radius:99px;background:var(--card);border:1px solid var(--bd);color:var(--mut);margin-left:6px}
+footer{margin-top:50px;padding-top:18px;border-top:1px solid var(--bd);color:var(--mut);font-size:14px}
+@media(max-width:860px){
+.wrap{display:block}#menu{display:inline-block}
+nav{display:none;position:fixed;inset:calc(58px + env(safe-area-inset-top,0px)) 0 0 0;height:auto;background:var(--bg);z-index:9;padding:16px}
+nav.open{display:block}main{padding:20px 16px 80px}}
+</style>
+</head>
+<body>
+<header>
+<button class="ic" id="menu" aria-label="Menu">☰ Menu</button>
+<span class="logo">Gameplay<b>Core</b></span><span class="tag">Roblox · Luau</span>
+<span class="sp"></span>
+<button class="ic" id="theme" aria-label="Toggle theme">◐ Theme</button>
+</header>
+<div class="wrap">
+<nav id="nav"></nav>
+<main>
+
+<div class="hero">
+<h1>Tags &amp; Stats for <span>Roblox gameplay</span></h1>
+<p>One small package that holds the state (<em>tags</em>) and the numbers (<em>stats</em>) of every character, so your stun, block, potion and weapon modules never fight each other.</p>
+<a class="btn" href="#quickstart">Quick start</a><a class="btn o" href="#api">API reference</a>
+<pre><code>local entity = Core.Attach(character, { stats = { Speed = 16 } })
+
+entity.Tags:Add("State.Stunned.Hard", "StunHandler", 2)   -- stunned for 2s
+entity.Stats:AddModifier("Speed", { type = "Mult", value = 0.5, source = "Slow", duration = 3 })
+
+print(entity.Tags:Has("State.Stunned"))   -- true
+print(entity.Stats:Get("Speed"))          -- 8</code></pre>
+</div>
+
+<section id="why"><h2>Why GameplayCore?</h2>
+<p>Without a shared system, modules overwrite each other: a potion sets <code>WalkSpeed = 20</code> and silently cancels the stun that set it to <code>0</code>. GameplayCore lets each module <em>declare what it does</em>, and computes the correct result.</p>
+<div class="tw"><table><tr><th>Without</th><th>With GameplayCore</th></tr>
+<tr><td><code>isStunned = true</code> everywhere</td><td>A <strong>tag</strong> <code>State.Stunned</code></td></tr>
+<tr><td><code>WalkSpeed = WalkSpeed * 1.2</code></td><td>A <strong>modifier</strong> on the <code>Speed</code> stat</td></tr>
+<tr><td>Remember to restore values</td><td>Automatic expiry, or <code>RemoveBySource</code></td></tr>
+<tr><td>Modules overwrite each other</td><td>Effects stack and unstack cleanly</td></tr></table></div></section>
+
+<section id="install"><h2>Installation</h2>
+<p>Everything lives in <strong>ReplicatedStorage</strong> so both server and clients can use it.</p>
+<pre class="p"><code>ReplicatedStorage
+└── GameplayCore        ModuleScript (init.luau)
+    ├── Signal          ModuleScript
+    ├── Ticker          ModuleScript
+    ├── TagRegistry     ModuleScript
+    ├── TagContainer    ModuleScript
+    └── StatContainer   ModuleScript</code></pre>
+<div class="grid">
+<div class="card"><h4>Easiest</h4><p>Right-click ReplicatedStorage → <em>Insert from File</em> → <code>GameplayCore.rbxmx</code>.</p></div>
+<div class="card"><h4>Rojo</h4><p>Copy the <code>GameplayCore</code> folder into <code>src/shared</code>. Rojo reads <code>init.luau</code>.</p></div>
+<div class="card"><h4>By hand</h4><p>Create the 6 ModuleScripts with the exact names above (the five modules are <em>children</em>).</p></div></div>
+<pre><code>local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local Core = require(ReplicatedStorage:WaitForChild("GameplayCore"))</code></pre></section>
+
+<section id="concepts"><h2>Core concepts</h2>
+<div class="grid">
+<div class="card"><h4>Entity</h4><p>Someone with tags and stats: a player, an NPC, a boss. One per character.</p></div>
+<div class="card"><h4>Tag</h4><p>A temporary label of what the entity <em>is</em> right now: <code>State.Stunned</code>. Present or absent.</p></div>
+<div class="card"><h4>Stat</h4><p>A computed number: <code>Speed</code>, <code>Damage</code>. A base plus modifiers.</p></div>
+<div class="card"><h4>Source</h4><p>Who applied a tag or modifier (<code>"Potion"</code>, a tool). Used to remove things cleanly.</p></div></div>
+<p>Dots build a <strong>hierarchy</strong>: holding <code>State.Stunned.Hard</code> also counts as holding <code>State.Stunned</code> and <code>State</code>.</p></section>
+
+<section id="quickstart"><h2>Quick start</h2>
+<pre><code>-- Core.Attach(owner, config)
+--   owner  : usually the character Model (entity is cleaned up when it is destroyed)
+--   config : { stats = {...}, strictStats = bool }  (both optional)
+-- Returns the entity (.Tags and .Stats). Returns the existing one if already attached.
+local entity = Core.Attach(character, {
+	stats = { Speed = 16, Damage = 10 },   -- a number is a shortcut for { base = n }
+})
+
+entity.Tags:Add("State.Stunned.Hard", "StunHandler", 2)
+print(entity.Tags:Has("State.Stunned"))    -- true, then false after 2s
+
+entity.Stats:AddModifier("Speed", { type = "Flat", value = 4, source = "Boots" })
+print(entity.Stats:Get("Speed"))           -- 20
+
+entity.Stats:RemoveBySource("Boots")
+print(entity.Stats:Get("Speed"))           -- 16
+
+local same = Core.Get(character)           -- from any other script (nil if missing)</code></pre></section>
+
+<section id="tags"><h2>Tags</h2>
+<h3>Declare your tags <span class="tag">recommended</span></h3>
+<p>Strict mode turns typos like <code>"State.Stuned"</code> into clear errors.</p>
+<pre><code>Core.Tags.Define({
+	State = {
+		Stunned = { "Soft", "Hard" },   -- State.Stunned.Soft / .Hard
+		Blocking = true,                -- State.Blocking
+		Invulnerable = true,
+	},
+	Damage = { Fire = true },
+})
+Core.Tags.SetStrict(true)               -- unknown tags now throw</code></pre>
+<p>Names: letters, digits, <code>_</code> and <code>.</code> only. Max 24 levels.</p>
+
+<h3>Add a tag</h3>
+<pre><code>entity.Tags:Add(
+	"State.Stunned.Hard",  -- tag      : required
+	"StunHandler",         -- source   : who applies it (default "Default")
+	2                      -- duration : seconds before auto-removal (nil = permanent)
+)
+-- Adding the same (tag, source) again refreshes it and keeps the LONGEST duration.
+-- Another source can hold the same tag: it stays until ALL sources removed it.</code></pre>
+
+<h3>Remove tags</h3>
+<div class="tw"><table><tr><th>Call</th><th>Effect</th><th>Returns</th></tr>
+<tr><td><code>Remove(tag, source?)</code></td><td>Removes only that source’s share</td><td>boolean</td></tr>
+<tr><td><code>RemoveAllFromSource(source)</code></td><td>Removes everything that source holds</td><td>count</td></tr>
+<tr><td><code>RemoveTag(tag)</code></td><td>Force-removes, whatever the sources</td><td>boolean</td></tr>
+<tr><td><code>RemoveTagTree(tag)</code></td><td>Removes the tag and all descendants</td><td>count</td></tr>
+<tr><td><code>Clear()</code></td><td>Removes everything</td><td>nothing</td></tr></table></div>
+<div class="note w"><code>Remove(tag)</code> without a source only removes what was added with the <code>"Default"</code> source.</div>
+
+<h3>Check tags</h3>
+<pre><code>tags:Has("State.Stunned")          -- true if it OR a child is present (hierarchical)
+tags:HasExact("State.Stunned")     -- true only if this exact tag was added
+tags:HasAny({ "A", "B" })          -- at least one
+tags:HasAll({ "A", "B" })          -- all of them
+tags:Matches("State.*")            -- at least one STRICT descendant of State
+
+-- Satisfies: one table for a whole condition (all fields optional, wildcards allowed)
+tags:Satisfies({
+	all  = { "State.Armed" },                       -- every one present
+	any  = { "State.Idle", "State.Running" },       -- at least one present
+	none = { "State.Stunned", "State.Silenced" },   -- none present
+})</code></pre>
+
+<h3>Multiple sources</h3>
+<pre><code>tags:Add("State.Stunned.Hard", "BossSlam")
+tags:Add("State.Stunned.Hard", "TrapSpikes")
+tags:Remove("State.Stunned.Hard", "BossSlam")
+print(tags:Has("State.Stunned.Hard"))   -- true, the trap still holds it
+tags:Remove("State.Stunned.Hard", "TrapSpikes")
+print(tags:Has("State.Stunned.Hard"))   -- false</code></pre></section>
+
+<section id="stats"><h2>Stats</h2>
+<h3>How the final value is computed</h3>
+<pre class="p"><code>value = (base + sum(Flat)) × (1 + sum(Increase)) × product(Mult)
+Override active → it replaces the result, then clamp(min, max) and rounding</code></pre>
+<div class="tw"><table><tr><th>Type</th><th>Meaning</th><th><code>value</code></th><th>Base 16 →</th></tr>
+<tr><td><code>Flat</code></td><td>Adds a number</td><td><code>4</code></td><td>20</td></tr>
+<tr><td><code>Increase</code></td><td>Adds a percentage (they add up together)</td><td><code>0.25</code> = +25%</td><td>20</td></tr>
+<tr><td><code>Mult</code></td><td>Multiplies (they multiply together)</td><td><code>1.2</code> = ×1.2</td><td>19.2</td></tr>
+<tr><td><code>Override</code></td><td>Forces the final value</td><td><code>0</code></td><td>0</td></tr></table></div>
+<pre><code>-- (16 + 4) × (1 + 0.25 + 0.25) × 1.2 = 36
+stats:AddModifier("Speed", { type = "Flat",     value = 4,    source = "Boots" })
+stats:AddModifier("Speed", { type = "Increase", value = 0.25, source = "Potion" })
+stats:AddModifier("Speed", { type = "Increase", value = 0.25, source = "Aura" })
+stats:AddModifier("Speed", { type = "Mult",     value = 1.2,  source = "Buff" })</code></pre>
+
+<h3>Define stats</h3>
+<pre><code>Core.Attach(character, {
+	stats = {
+		Speed = 16,                                  -- shortcut for { base = 16 }
+		Crit  = { base = 0.1, min = 0, max = 0.75 }, -- never below 0 or above 0.75
+		Level = { base = 1.4, rounding = "floor" },  -- "floor" | "ceil" | "round"
+	},
+	strictStats = true,  -- unknown stat = error (default false: auto-created with base 0)
+})
+entity.Stats:Define("Armor", 5)   -- Define creates a stat later (or redefines an existing one)</code></pre>
+
+<h3>Derived stats (formula)</h3>
+<pre><code>entity.Stats:Define("Vitality", 10)
+entity.Stats:Define("MaxHealth", {
+	-- formula: a recipe the module runs for you. get(name) reads another stat.
+	formula = function(get)
+		return 100 + get("Vitality") * 10
+	end,
+})
+print(entity.Stats:Get("MaxHealth"))     -- 200
+entity.Stats:SetBase("Vitality", 20)
+print(entity.Stats:Get("MaxHealth"))     -- 300, updated by itself</code></pre>
+<p>Dependencies are detected automatically. Modifiers apply on top of the formula result. A stat with a formula has no manual base (<code>SetBase</code> errors), and circular formulas throw.</p>
+
+<h3>AddModifier</h3>
+<pre><code>local modifier = entity.Stats:AddModifier("Speed", {   -- returns a handle
+	type = "Mult", value = 0.5,    -- required
+	source = "SlowTrap",           -- default "Unknown"
+	duration = 3,                  -- seconds, default permanent
+})</code></pre>
+<div class="tw"><table><tr><th>Field</th><th>Default</th><th>Role</th></tr>
+<tr><td><code>type</code> / <code>value</code></td><td>required</td><td>See the table above</td></tr>
+<tr><td><code>source</code></td><td><code>"Unknown"</code></td><td>Who applies it</td></tr>
+<tr><td><code>duration</code></td><td>permanent</td><td>Auto-removal after N seconds</td></tr>
+<tr><td><code>key</code></td><td>none</td><td>Identifies “the same effect” for stacking</td></tr>
+<tr><td><code>stacking</code></td><td><code>"Replace"</code></td><td>Rule when (source, key) is added again</td></tr>
+<tr><td><code>maxStacks</code></td><td>unlimited</td><td>Cap for <code>"Stack"</code></td></tr>
+<tr><td><code>priority</code></td><td><code>0</code></td><td>For Override: highest wins</td></tr>
+<tr><td><code>condition</code></td><td>none</td><td>Active only while tags match</td></tr></table></div>
+<div class="tw"><table><tr><th><code>stacking</code></th><th>What happens</th></tr>
+<tr><td><code>Replace</code></td><td>Overwrites the existing modifier (same handle)</td></tr>
+<tr><td><code>Stack</code></td><td>+1 stack up to <code>maxStacks</code>; value × stacks (Mult: power)</td></tr>
+<tr><td><code>Refresh</code></td><td>Only resets the duration</td></tr>
+<tr><td><code>Ignore</code></td><td>Does nothing</td></tr></table></div>
+<pre><code>-- Poison: +2 damage per stack, max 5 stacks, 8s timer restarts on each hit
+stats:AddModifier("Damage", { type = "Flat", value = 2, source = "Poison",
+	key = "poison", stacking = "Stack", maxStacks = 5, duration = 8 })</code></pre>
+
+<h3>Manage modifiers</h3>
+<pre><code>modifier:Remove()            -- true if it was still active
+modifier:SetValue(0.8)       -- change value, the stat recomputes
+modifier:SetDuration(5)      -- remaining time = 5s (nil = permanent)
+modifier:GetTimeLeft()       -- seconds left, nil if permanent
+modifier:IsActive()
+
+stats:RemoveBySource("IronSword")            -- on every stat, returns the count
+stats:RemoveBySource("IronSword", "Speed")   -- only on Speed
+stats:HasSource("IronSword")                 -- boolean
+stats:Breakdown("Speed")   -- Base, Flat, Increase, Mult, Override, Value, Modifiers[] (great for tooltips)</code></pre></section>
+
+<section id="conditions"><h2>Conditional modifiers</h2>
+<p>The feature that links everything. A modifier with a <code>condition</code> (same format as <code>Satisfies</code>) is active only while tags match, and the stat recomputes by itself when tags change.</p>
+<pre><code>-- Written ONCE when the entity is created
+entity.Stats:AddModifier("Speed", {
+	type = "Override", value = 0, priority = 100, source = "StunRule",
+	condition = { all = { "State.Stunned" } },
+})
+entity.Stats:AddModifier("Speed", {
+	type = "Mult", value = 0.6, source = "BlockRule",   -- -40% while blocking
+	condition = { all = { "State.Blocking" } },
+})
+
+-- Your StunHandler now needs a single line:
+entity.Tags:Add("State.Stunned.Hard", "StunHandler", 2)</code></pre>
+<div class="note">Speed drops to 0 for 2 seconds, then comes back. The StunHandler knows nothing about speed, and speed knows nothing about the StunHandler. <code>Core.Attach</code> links tags and stats automatically.</div></section>
+
+<section id="observe"><h2>Reacting to changes</h2>
+<pre><code>-- Stat: callback(new, old) is called immediately with (value, value), then on every change
+local conn = entity.Stats:Observe("Speed", function(new, old)
+	humanoid.WalkSpeed = new
+end)
+entity.Stats.Changed:Connect(function(statName, new, old) end)   -- all stats
+
+-- Tag: callback(present) is called immediately, then whenever it appears/disappears
+entity.Tags:Observe("State.Stunned", function(present) end)
+entity.Tags.TagAdded:Connect(function(tag) end)
+entity.Tags.TagRemoved:Connect(function(tag) end)
+entity.Tags:WaitFor("State.Grounded", 3)   -- yields; true if it appeared, false on timeout</code></pre>
+<div class="note w">Stat events are <strong>batched and deferred</strong>: ten modifiers in one frame fire one event with the final value, and no event if the net change is zero. <code>Get()</code> is always immediate. Use <code>stats:Flush()</code> to fire pending events now.</div></section>
+
+<section id="integrations"><h2>Using it with your modules</h2>
+<h3>StunHandler</h3>
+<pre><code>local function stun(targetModel, duration)
+	local entity = Core.Get(targetModel)
+	if not entity or entity.Tags:Has("State.Invulnerable") then return end
+	entity.Tags:Add("State.Stunned.Hard", "StunHandler", duration)
+end</code></pre>
+<h3>CastHitbox</h3>
+<pre><code>hitbox.OnHit:Connect(function(victimModel)
+	local victim, attacker = Core.Get(victimModel), Core.Get(attackerModel)
+	if not victim or not attacker or victim.Tags:Has("State.Invulnerable") then return end
+	local damage = attacker.Stats:Get("Damage")
+	if victim.Tags:Has("State.Blocking") then damage *= 0.3 end
+	victimHumanoid:TakeDamage(damage)
+end)</code></pre>
+<h3>Humanoid &amp; equipment</h3>
+<pre><code>entity.Stats:Observe("Speed",     function(v) humanoid.WalkSpeed = v end)
+entity.Stats:Observe("MaxHealth", function(v) humanoid.MaxHealth = v end)
+
+stats:AddModifier("Damage", { type = "Flat", value = 15, source = tool })   -- equip
+stats:RemoveBySource(tool)                                                  -- unequip: all gone</code></pre>
+<h3>ProfileStore</h3>
+<p>Save <strong>base values</strong>, not computed values or temporary modifiers.</p>
+<pre><code>for name, base in profile.Data.Stats do entity.Stats:SetBase(name, base) end   -- on load
+profile.Data.Stats.Vitality = entity.Stats:GetBase("Vitality")                   -- on save</code></pre></section>
+
+<section id="replication"><h2>Replication</h2>
+<p>You pick the transport (RemoteEvent, Blink, ByteNet…). The package gives you <code>Serialize()</code> and <code>ApplySnapshot()</code>. The server is the authority; clients only receive results, never modifiers.</p>
+<pre><code>-- SERVER
+local function replicate(player, entity)
+	local scheduled = false
+	local function send()
+		if scheduled then return end
+		scheduled = true
+		task.defer(function()   -- one send per frame
+			scheduled = false
+			remote:FireClient(player, entity.Tags:Serialize(), entity.Stats:Serialize())
+		end)
+	end
+	entity.Tags.Changed:Connect(send)
+	entity.Stats.Changed:Connect(send)
+	send()
+end
+
+-- CLIENT
+remote.OnClientEvent:Connect(function(tags, stats)
+	entity.Tags:ApplySnapshot(tags)     -- diff: only real changes fire events
+	entity.Stats:ApplySnapshot(stats)   -- server values become client bases
+end)</code></pre></section>
+
+<section id="api"><h2>API reference</h2>
+<h3>Core</h3>
+<div class="tw"><table><tr><th>Member</th><th>Returns</th><th>Description</th></tr>
+<tr><td><code>Core.Attach(owner, config?)</code></td><td>entity</td><td>Creates or returns the entity of <code>owner</code></td></tr>
+<tr><td><code>Core.Get(owner)</code> / <code>Core.Has(owner)</code></td><td>entity? / boolean</td><td>Look up an entity</td></tr>
+<tr><td><code>Core.Detach(owner)</code></td><td>nothing</td><td>Destroys the entity</td></tr>
+<tr><td><code>Core.TagContainer.new(owner?)</code></td><td>TagContainer</td><td>Manual tag container</td></tr>
+<tr><td><code>Core.StatContainer.new(config?)</code></td><td>StatContainer</td><td><code>{ owner?, tags?, stats?, strict? }</code></td></tr>
+<tr><td><code>Core.Signal.new()</code></td><td>Signal</td><td>Fast event class</td></tr></table></div>
+<h3>Core.Tags (registry)</h3>
+<div class="tw"><table><tr><th>Function</th><th>Description</th></tr>
+<tr><td><code>Define(tree)</code> / <code>Register(tags)</code></td><td>Declare tags (parents included)</td></tr>
+<tr><td><code>SetStrict(bool)</code></td><td>Unknown tags throw</td></tr>
+<tr><td><code>IsRegistered(tag)</code> / <code>GetAll()</code></td><td>Inspect the registry</td></tr>
+<tr><td><code>IsChildOf(tag, parent)</code> / <code>GetParent(tag)</code></td><td>Hierarchy helpers</td></tr></table></div>
+<h3>TagContainer <span class="tag">entity.Tags</span></h3>
+<div class="tw"><table><tr><th>Method</th><th>Returns</th></tr>
+<tr><td><code>Add(tag, source?, duration?)</code></td><td>nothing</td></tr>
+<tr><td><code>Remove(tag, source?)</code> · <code>RemoveTag(tag)</code></td><td>boolean</td></tr>
+<tr><td><code>RemoveAllFromSource(source)</code> · <code>RemoveTagTree(tag)</code></td><td>count</td></tr>
+<tr><td><code>Has</code> · <code>HasExact</code> · <code>HasAny</code> · <code>HasAll</code> · <code>Matches</code> · <code>Satisfies</code></td><td>boolean</td></tr>
+<tr><td><code>GetCount(tag)</code> · <code>GetSources(tag)</code> · <code>GetTimeLeft(tag, source?)</code></td><td>number · list · number?</td></tr>
+<tr><td><code>GetTags()</code> · <code>GetTagsUnder(prefix)</code> · <code>Serialize()</code></td><td>list of tags</td></tr>
+<tr><td><code>Observe(tag, cb)</code> · <code>WaitFor(tag, timeout?)</code></td><td>connection · boolean</td></tr>
+<tr><td><code>ApplySnapshot(list, source?)</code> · <code>Clear()</code> · <code>Dump()</code> · <code>Destroy()</code></td><td>—</td></tr></table></div>
+<p>Signals: <code>TagAdded(tag)</code>, <code>TagRemoved(tag)</code>, <code>Changed(tag, present)</code>.</p>
+<h3>StatContainer <span class="tag">entity.Stats</span></h3>
+<div class="tw"><table><tr><th>Method</th><th>Returns</th></tr>
+<tr><td><code>Define(name, def)</code> · <code>SetBase(name, n)</code> · <code>AddBase(name, delta)</code></td><td>nothing</td></tr>
+<tr><td><code>Get(name)</code> · <code>GetBase(name)</code></td><td>number</td></tr>
+<tr><td><code>Has(name)</code> · <code>HasSource(source, stat?)</code> · <code>RemoveModifier(handle)</code></td><td>boolean</td></tr>
+<tr><td><code>GetAll()</code> · <code>Serialize()</code></td><td>{ name = value }</td></tr>
+<tr><td><code>Breakdown(name)</code></td><td>detail table</td></tr>
+<tr><td><code>AddModifier(stat, def)</code></td><td>handle</td></tr>
+<tr><td><code>RemoveBySource(source, stat?)</code></td><td>count</td></tr>
+<tr><td><code>GetModifiers(stat)</code></td><td>list of handles</td></tr>
+<tr><td><code>Observe(stat, cb)</code> · <code>GetChangedSignal(stat)</code></td><td>connection · Signal</td></tr>
+<tr><td><code>Flush()</code> · <code>ApplySnapshot(values)</code> · <code>Dump()</code> · <code>Destroy()</code></td><td>—</td></tr></table></div>
+<p>Signal: <code>Changed(stat, new, old)</code>. Handle: <code>Remove</code>, <code>SetValue</code>, <code>SetDuration</code>, <code>GetTimeLeft</code>, <code>IsActive</code>.</p></section>
+
+<section id="trouble"><h2>Troubleshooting</h2>
+<div class="tw"><table><tr><th>Problem</th><th>Cause → fix</th></tr>
+<tr><td><code>Signal is not a valid member…</code></td><td>A child module is missing or misnamed → check the 5 exact names</td></tr>
+<tr><td><code>Unknown tag "X" (strict mode)</code></td><td>Typo or undeclared → add it to <code>Tags.Define</code></td></tr>
+<tr><td><code>Unknown stat "X" (strict mode)</code></td><td>Not in <code>stats</code> → define it</td></tr>
+<tr><td><code>Modifier has a condition but…</code></td><td>No TagContainer linked → use <code>Core.Attach</code></td></tr>
+<tr><td>A tag will not go away</td><td>Another source holds it → <code>Tags:GetSources(tag)</code></td></tr>
+<tr><td>Speed did not change</td><td>A conditional modifier is inactive → <code>Breakdown</code>, check <code>ConditionMet</code></td></tr></table></div>
+<div class="note">Debug with <code>print(entity.Tags:Dump())</code> and <code>print(entity.Stats:Dump())</code>.</div>
+<footer>Verified with 74 automated tests on the Luau interpreter using a mocked Roblox environment. Not yet tested directly in Roblox Studio (real <code>Instance.Destroying</code> and <code>Heartbeat</code>); try <code>Examples/Demo.server.luau</code> first.</footer></section>
+
+</main></div>
+<script>
+(function(){
+var K=/(--[^\n]*)|("(?:[^"\\\n]|\\.)*")|\b(local|function|end|if|then|else|elseif|return|for|in|do|while|not|and|or|nil|true|false)\b|\b(\d+\.?\d*)\b/g;
+document.querySelectorAll("pre").forEach(function(pre){
+var c=pre.querySelector("code");
+if(!pre.classList.contains("p")){
+var t=c.textContent.replace(/&/g,"&amp;").replace(/</g,"&lt;");
+c.innerHTML=t.replace(K,function(m,a,b,d,e){return a?'<span class="c">'+a+"</span>":b?'<span class="s">'+b+"</span>":d?'<span class="k">'+d+"</span>":'<span class="n">'+e+"</span>"})}
+var b=document.createElement("button");b.className="cp";b.textContent="Copy";
+b.onclick=function(){var x=c.textContent;(navigator.clipboard?navigator.clipboard.writeText(x):Promise.reject()).then(function(){b.textContent="Copied"},function(){b.textContent="Press Ctrl+C"});setTimeout(function(){b.textContent="Copy"},1400)};
+pre.appendChild(b)});
+var nav=document.getElementById("nav"),h="",secs=document.querySelectorAll("section");
+secs.forEach(function(s){h+='<a href="#'+s.id+'">'+s.querySelector("h2").textContent+"</a>"});
+nav.innerHTML=h;
+var links=nav.querySelectorAll("a");
+links.forEach(function(a){a.onclick=function(){nav.classList.remove("open")}});
+var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){links.forEach(function(a){a.classList.toggle("on",a.getAttribute("href")==="#"+e.target.id)})}})},{rootMargin:"-20% 0px -70% 0px"});
+secs.forEach(function(s){io.observe(s)});
+document.getElementById("menu").onclick=function(){nav.classList.toggle("open")};
+document.getElementById("theme").onclick=function(){var r=document.documentElement,d=r.getAttribute("data-theme");
+var dark=d?d==="dark":matchMedia("(prefers-color-scheme: dark)").matches;r.setAttribute("data-theme",dark?"light":"dark")};
+})();
+</script>
+</body>
+</html>
